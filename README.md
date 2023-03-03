@@ -1,7 +1,4 @@
-# DSI_Capstone_Project_Sepsis
-Capstone Final Project for Data Science Immersive Flex course
-
-# Early Sepsis Prediction
+# DSI Capstone Project : Early Sepsis Prediction
 For the fulfillment of requirements of Data Science Immersive Flex Course.
 
 
@@ -32,22 +29,82 @@ Patients with onset of sepsis have longer stay in the hospital, while all patien
 
 # Data Preparation:
 
+### Steps
+1. Impute missing data with nearest front/ back record for same patient
+2. For each patient, take an aggregate of 3 hours before the real/pseudo sepsis onset
+3. Drop all rows with at least 1 Null value after imputation
+4. Drop variables that are highly correlated with corr>0.6
+5. Upscale minority data class if imbalanced
 
-### Impute missing values
-
-
-# Preliminary Modelling:
-
-### Model 1:
-![image](https://user-images.githubusercontent.com/110540717/220348039-d784994b-9b44-443b-939d-d16114dffffd.png)
-
-![image](https://user-images.githubusercontent.com/110540717/220347874-6bf5afef-ae83-4ed1-b15b-a46b9513d4e0.png)
-
-
-### Model 2:
-![image](https://user-images.githubusercontent.com/110540717/220348231-f7f84f04-1a3b-4184-8140-509d583e33eb.png)
+### Correlated Values
+![image](https://user-images.githubusercontent.com/110540717/222810161-b5ef010d-2335-4b6a-8778-7d4a00729077.png)
 
 
-Conclusion:
+### Data Dictionary for the final training dataset
 
-Recommendations:
+
+|No|Name|Category|Type of Variable|Description|
+|---|:---|:---|:---|:---|
+|1.|HR|Vital Sign|numerical|Heart Rate (beats per minute) ^ |
+|2.|O2Sat|Vital Sign|numerical|Pulse Oximetry (%)^ |
+|3.|Temp|Vital Sign|numerical|Temperature (Deg C)^ |
+|4.|SBP|Vital Sign|numerical|Systolic BP (mm Hg)^|
+|5.|DBP|Vital Sign|numerical|Diastolic BP (mm Hg)^|
+|6.|Resp|Vital Sign|numerical|Respiration Rate (breaths per minute)^|
+|7.|BUN|Laboratory Values|numerical|Blood Urea Nitrogen (mg/dL)^|
+|8.|Calcium|Laboratory Values|numerical|Calcium (mg/dL)^|
+|9.|Glucose|Laboratory Values|numerical|Serum Glucose (mg/dL)^|
+|10.|Magnesium|Laboratory Values|numerical|Magnesium (mmol/dL)^|
+|11.|Potassium|Laboratory Values|numerical|Potassium (mmol/dL)^|
+|12.|Hgb|Laboratory Values|numerical|Hemoglobin (g/dL)^|
+|13.|WBC|Laboratory Values|numerical|Leukocyte count (count * 10^3/microL)^|
+|14.|Platelets|Laboratory Values|numerical|Platelet count (count * 10^3/microL)^|
+|15.|SepsisLabel|Target variable|boolean|1 if patient turned septic in hour T0, else 0|
+|16.|Gender|Demographics|boolean|Patient's Gender shown as 0 or 1 (not specified male or female)|
+|17.|Age|Demographics|numerical|Patient's Age in Years (Reflected as 100 for patients 90 and above)|
+|18.|HospAdmTime|Demographics|numerical|Hours between hospital admit and ICU admit|
+
+^ Represents average reading for 3 hour window before sepsis onset/ pseudo-onset of sepsis (i.e. if onset was T0, readings are average of hours T-3 to T-1).
+
+### Distributions of final data for modelling
+![image](https://user-images.githubusercontent.com/110540717/222810248-31066bae-cbfa-485f-b0c8-16286520d31e.png)
+
+# Modelling 
+
+### Best Model: Extra Trees Classifier
+
+- Area under the ROC Curve:
+
+![image](https://user-images.githubusercontent.com/110540717/222810427-4595babf-9c1f-43bd-a73f-54b1f367d5a0.png)
+
+- Confusion Matrix
+![image](https://user-images.githubusercontent.com/110540717/222810529-0e67de43-d3a8-496a-802c-246316bb36d3.png)
+
+- Top feature importance
+
+![image](https://user-images.githubusercontent.com/110540717/222810564-20b33ae0-602d-4245-b37b-357fec1ed491.png)
+
+
+# Conclusion:
+
+### Model:
+Best model (Extra Trees Classifier) has a high AUC score about 0.91 and Recall of 0.81.
+
+Top 3 most important features for sepsis prediction (1h advance prediction window):
+Temperature (deg Celsius)
+Respiration rate (breaths per minute)
+Blood Urea Nitrogen
+
+*There is a good spread of Vital signs and Laboratory values among the best predictors, hence no conclusion on whether vital signs or laboratory readings are more important
+![image](https://user-images.githubusercontent.com/110540717/222810585-7432e38f-7766-4595-b725-c9ea29e1e368.png)
+
+### Recommendations:
+Adding the following features for better model performance:
+- Changes in vital signs over the past x hours (e.g. Difference in Heart Rates at hours T-1 and T-5)
+- Rate of change in vital signs over past x hours
+- Text analysis of doctor’s remarks
+
+### Limitations:
+- Do not have external test datasets outside of this dataset
+- Only have data of sepsis onset; no data on septic shock or eventual death, hence cannot evaluate severity
+
