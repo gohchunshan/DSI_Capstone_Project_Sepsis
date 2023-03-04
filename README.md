@@ -17,9 +17,9 @@ The goal of the analysis is the early detection of sepsis using physiological da
 
 ### Demographics
 The distribution of Gender and Age groups do not show any particular subgroup of patients being especially prone to sepsis. 
-![image](https://user-images.githubusercontent.com/110540717/222811621-dee1ab7f-7153-40c3-baf8-18f1f9fec7b8.png)
 
-![image](https://user-images.githubusercontent.com/110540717/222811589-1928b0d7-7c6f-4063-8e77-48e480781ea4.png)
+![image](https://user-images.githubusercontent.com/110540717/222880664-1ef095a7-3624-4436-86cd-6e7d03760651.png)
+
 
 #### 1. Gender
 More patient data was collected for Gender 1 than Gender 0 in the entire dataset. Higher proportion of Gender 1 turned septic (7.7%) compared to Gender 0 (6.7%)
